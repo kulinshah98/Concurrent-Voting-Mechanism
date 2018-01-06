@@ -1,0 +1,17 @@
+
+I have wrote two merge sort.
+  -> Simple Merge sort
+  -> Concurrent Merge sort
+
+Then I run both code multiple times . I found different output then expected.
+  -> My expectation was Concurrent Merge sort would run faster because of shared memory.
+  -> I found that Simple Merge sort is running faster.
+  -> Then I found that Simple Merge sort should run faster because of following reasons.
+      -> concurrent Merge sort is accessing left array and right array simultaneously.
+
+      -> When concurrent Merge sort is accessing left array, left array is loaded into cache memory. Then Concurrent Merge sort tries to
+         access right array then cache miss would happen . Because of cache miss multiple times, execution of code slows down.
+
+      -> But in Simple Merge sort, 2 or 3 elements of left and right array is accessing at a time. therefore that elements can stay in
+         cache and retrieval time of those elements is much lesser than retrieval time of elements in concurrent merge sort.
+         

@@ -30,18 +30,16 @@ void *voter(void *arg)
       voter_num=i;
       break;
     }
-  //  printf("***VOTER***%d %d\n",bth_num,voter_num);
   }
-  //printf("Voter - %d %d %d\n",bth_num,voter_num,bth[bth_num].evm[voter_num]);
+
   int tmp;
   while(bth[bth_num].evm[voter_num]==-1)
   {
     tmp=rand()%3;
     sleep(tmp);
-    //printf("***VOTER***%d %d\n",bth_num,voter_num);
   }
   bth[bth_num].count[bth[bth_num].evm[voter_num]]--;
-  //printf("***VOTER***%d %d\n",bth_num,voter_num);
+
   return NULL;
 }
 
@@ -65,32 +63,24 @@ void *evm_func(void *arg)
       break;
     }
   }
-//printf("EVM - %d %d\n",bth_num,evm_num);
+
   int tmp,counter;
   while(1)
   {
     tmp=rand()%2;
     sleep(tmp);
-  /*  pthread_mutex_lock(&bth[bth_num].mutex);
-    printf("****OUT****%d %d\n",bth_num,evm_num);
-    pthread_mutex_unlock(&bth[bth_num].mutex);*/
+
     if(bth[bth_num].count[evm_num]==0)
     {
-  //    printf("*******%d %d\n",bth_num,evm_num);
       pthread_mutex_lock(&bth[bth_num].mutex);
-      //printf("%d %d %d %d\n",bth_num,evm_num,bth[bth_num].num_voters_done,bth[bth_num].num_voters);
+
       if(bth[bth_num].num_voters_done==bth[bth_num].num_voters)
       {
-        //pthread_mutex_lock(&bth[bth_num].mutex);
-      //  printf("****C****%d %d\n",bth_num,evm_num);
-      //  pthread_mutex_unlock(&bth[bth_num].mutex);
-      //return NULL;
-      pthread_mutex_unlock(&bth[bth_num].mutex);
+        pthread_mutex_unlock(&bth[bth_num].mutex);
         break;
       }
       counter=rand()%(bth[bth_num].cap_evm)+1;
       printf("EVM %d at booth %d is free with slots=%d\n",evm_num+1,bth_num+1,counter);
-      //printf("%d %d %d %d\n",bth_num,evm_num,bth[bth_num].num_voters_done,bth[bth_num].num_voters);
       bth[bth_num].count[evm_num]=counter;
       for(i=0;i<bth[bth_num].num_voters;i++)
       {
@@ -108,19 +98,15 @@ void *evm_func(void *arg)
       bth[bth_num].count[evm_num] = bth[bth_num].count[evm_num] - counter;
       bth[bth_num].num_voters_done+=bth[bth_num].count[evm_num];
       printf("EVM %d at Booth %d is moving for voting stage\n",evm_num+1,bth_num+1);
-  //    printf("%d %d %d %d\n",bth_num,evm_num,bth[bth_num].num_voters_done,bth[bth_num].num_voters);
+
       pthread_mutex_unlock(&bth[bth_num].mutex);
       if(bth[bth_num].num_voters_done==bth[bth_num].num_voters)
       {
-    //    pthread_mutex_lock(&bth[bth_num].mutex);
-//        printf("****C****%d %d\n",bth_num,evm_num);
-      //  pthread_mutex_unlock(&bth[bth_num].mutex);
-      return NULL;
+        return NULL;
         break;
       }
     }
   }
-  //printf("*******%d %d\n",bth_num,evm_num);
   return NULL;
 }
 
@@ -143,7 +129,6 @@ void initialise()
       tmp[i]=i;
       bth[i].evm[j]=-1;
       pthread_create(&bth[i].voter_tid[j],&bth[i].attr,voter,&tmp[i]);
-      //printf("--%d\n",bth[i].evm[j]);
     }
     for(j=0;j<bth[i].num_evms;j++)
     {
@@ -156,12 +141,10 @@ void initialise()
   {
     for(j=0;j<bth[i].num_voters;j++)
     {
-    //  printf("VOTER --- %d --- %d\n",i,j);
       pthread_join(bth[i].voter_tid[j],NULL);
     }
     for(j=0;j<bth[i].num_evms;j++)
     {
-      //printf("EVM --- %d --- %d\n",i,j);
       pthread_join(bth[i].evm_tid[j],NULL);
     }
   }
@@ -176,6 +159,5 @@ int main()
     scanf("%d%d%d",&bth[i].num_voters,&bth[i].num_evms,&bth[i].cap_evm);
   }
   initialise();
-  //sleep(10);
   return 0;
 }
